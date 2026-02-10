@@ -42,7 +42,7 @@ export function BloodPressureForm() {
 
   return (
     <div className="mx-auto max-w-5xl p-4 space-y-6">
-      <header className="flex items-center justify-between lg:flex-row gap-2 h-20 py-4">
+      <header className="flex flex-col lg:flex-row items-center justify-between gap-2 h-20 py-4">
         <div className="flex items-center gap-2">
           <Heart className="text-primary" />
           <h1 className="lg:text-2xl text-xl font-semibold">
