@@ -19,6 +19,13 @@ export async function getMyBloodPressureMeasurements() {
     orderBy: {
       measuredAt: "desc",
     },
+    include: {
+      user: {
+        select: {
+          name: true,
+        },
+      },
+    },
   });
 
   return measurements;

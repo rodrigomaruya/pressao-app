@@ -1,6 +1,9 @@
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 
+interface NameProps {
+  name: string | null;
+}
 interface Measurement {
   id: string;
   userId: string;
@@ -9,6 +12,7 @@ interface Measurement {
   pulse: number | null;
   measuredAt: Date;
   notes: string | null;
+  user: NameProps;
 }
 
 export function exportTableToPDF(measurements: Measurement[]) {
@@ -18,13 +22,17 @@ export function exportTableToPDF(measurements: Measurement[]) {
     format: "a4",
   });
 
+  // Adiciona nome no topo
+  doc.setFontSize(10);
+  doc.text(`Nome: ${measurements[0].user.name}`, 14, 10);
+
   // Adiciona título
   doc.setFontSize(16);
-  doc.text("Relatório de Medições de Pressão Arterial", 14, 15);
+  doc.text("Relatório de Medições de Pressão Arterial", 14, 20);
 
   // Adiciona data de geração
   doc.setFontSize(10);
-  doc.text(`Gerado em: ${new Date().toLocaleDateString("pt-BR")}`, 14, 25);
+  doc.text(`Gerado em: ${new Date().toLocaleDateString("pt-BR")}`, 14, 28);
 
   // Prepara dados para a tabela
   const tableData = measurements.map((m) => [

@@ -23,7 +23,7 @@ export default async function Home() {
     <div className="min-h-screen bg-background">
       <header className="border-b border-border">
         <div className="mx-auto flex h-14 max-w-4xl items-center justify-between px-4">
-          <span className="font-semibold text-foreground">Pressão</span>
+          <span className="font-semibold text-foreground">PressãoApp</span>
           <div className="flex items-center gap-2">
             {session?.user ? (
               <>
@@ -89,25 +89,42 @@ export default async function Home() {
               <div className="flex size-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
                 <Heart className="size-5" />
               </div>
-              <CardTitle className="text-base">Lembretes opcionais</CardTitle>
+              <CardTitle className="text-base">
+                Em breve lembretes opcionais
+              </CardTitle>
               <CardDescription>
-                Configure um horário para não esquecer de medir e manter a
-                rotina de cuidados.
+                Configure um horário para ser enviado uma notificação para seu
+                WhatsApp para não esquecer de medir e manter a rotina de
+                cuidados.
               </CardDescription>
             </CardHeader>
           </Card>
         </section>
-        {!session?.user && (
+        {!session?.user ? (
           <section className="mt-20 rounded-xl border border-border bg-card p-8 text-center shadow-sm md:p-12">
             <h2 className="text-xl font-semibold text-foreground md:text-2xl">
               Comece a registrar suas medições
             </h2>
             <p className="mt-2 text-muted-foreground">
-              Faça login com sua conta Google para acessar o dashboard e o
+              Faça login com sua conta Google para acessar o Painel e o
               histórico.
             </p>
             <div className="mt-6 flex justify-center">
               <GoogleSignInButton />
+            </div>
+          </section>
+        ) : (
+          <section className="mt-20 rounded-xl border border-border bg-card p-8 text-center shadow-sm md:p-12">
+            <h2 className="text-xl font-semibold text-foreground md:text-2xl">
+              Comece a registrar suas medições
+            </h2>
+            <div className="flex items-center justify-center mt-4">
+              <Link
+                href={"/dashboard"}
+                className="bg-neutral-800 text-white rounded-md px-4 py-2"
+              >
+                Ir para painel
+              </Link>
             </div>
           </section>
         )}

@@ -17,7 +17,11 @@ import { Heart, Home, Plus, X, Download } from "lucide-react";
 import { deleteBloodPressure } from "@/_actions/delete-bood-pressure";
 import { LogoutButton } from "./logout";
 import { exportTableToPDF } from "@/utils/exportPDF";
+import { toast } from "sonner";
 
+interface UserProps {
+  name: string | null;
+}
 interface Measurement {
   id: string;
   userId: string;
@@ -26,14 +30,15 @@ interface Measurement {
   pulse: number | null;
   measuredAt: Date;
   notes: string | null;
+  user: UserProps;
 }
-
 interface DashboardContentProps {
   getMeasurements: Measurement[];
 }
 
 export function DashboardContent({ getMeasurements }: DashboardContentProps) {
   const [selectedMonth, setSelectedMonth] = useState<string | undefined>();
+  const [disabled, setDisabled] = useState(false);
 
   // 🔹 Filtra medições por mês usando string YYYY-MM
   const filteredMeasurements = selectedMonth
@@ -43,7 +48,15 @@ export function DashboardContent({ getMeasurements }: DashboardContentProps) {
     : getMeasurements;
 
   async function deletar(id: string) {
-    await deleteBloodPressure(id);
+    setDisabled(true);
+    try {
+      await deleteBloodPressure(id);
+      toast.success("Deletado com sucesso.");
+      setDisabled(false);
+    } catch (error) {
+      toast.error("Erro ao deletar");
+      setDisabled(false);
+    }
   }
   return (
     <div className="mx-auto max-w-5xl p-4 space-y-6">
@@ -132,8 +145,18 @@ export function DashboardContent({ getMeasurements }: DashboardContentProps) {
                   <TableCell>
                     {`${m.measuredAt.getHours()}:${m.measuredAt.getMinutes().toString().padStart(2, "0")}`}
                   </TableCell>
-                  <TableCell className="font-medium">{m.systolic}</TableCell>
-                  <TableCell className="font-medium">{m.diastolic}</TableCell>
+                  <TableCell className="font-medium">
+                    {m.systolic}{" "}
+                    <span className="text-[10px] text-muted-foreground">
+                      mmHg
+                    </span>
+                  </TableCell>
+                  <TableCell className="font-medium">
+                    {m.diastolic}{" "}
+                    <span className="text-[10px] text-muted-foreground">
+                      mmHg
+                    </span>
+                  </TableCell>
                   <TableCell>{m.pulse ?? "-"}</TableCell>
                   <TableCell>{m.notes ?? "-"}</TableCell>
                   <TableCell>
@@ -142,6 +165,7 @@ export function DashboardContent({ getMeasurements }: DashboardContentProps) {
                       variant="outline"
                       className="text-red-600"
                       onClick={() => deletar(m.id)}
+                      disabled={disabled}
                     >
                       <X />
                     </Button>
@@ -180,27 +204,40 @@ export function DashboardContent({ getMeasurements }: DashboardContentProps) {
                 </div>
                 <div className="flex justify-between ">
                   <span className="text-muted-foreground">Hora</span>
-                  <span>{`${m.measuredAt.getHours()}:${m.measuredAt.getMinutes().toString().padStart(2, "0")}`}</span>
+                  <span>{`${m.measuredAt.getHours()}:${m.measuredAt.getMinutes().toString().padStart(2, "0")}h`}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Sistólica</span>
-                  <strong>{m.systolic}</strong>
+                  <strong>
+                    {m.systolic}
+                    <span className="text-[10px] text-muted-foreground">
+                      mmHg
+                    </span>
+                  </strong>
                 </div>
                 <div className="flex justify-between">
                   <span>Diastólica</span>
-                  <strong>{m.diastolic}</strong>
+                  <strong>
+                    {m.diastolic}{" "}
+                    <span className="text-[10px] text-muted-foreground">
+                      mmHg
+                    </span>
+                  </strong>
                 </div>
                 <div className="flex justify-between">
                   <span>Pulso</span>
                   <span>{m.pulse ?? "-"}</span>
                 </div>
                 {m.notes && (
-                  <div className="pt-2 text-muted-foreground">{m.notes}</div>
+                  <div className="flex justify-between">
+                    <span>Observação</span>
+                    <span>{m.notes ?? "-"}</span>
+                  </div>
                 )}
                 <div className="flex mt-2">
                   <Button
                     variant="destructive"
-                    className="w-full text-white font-bold"
+                    className="w-full text-white font-bold opacity-70"
                     onClick={() => deletar(m.id)}
                   >
                     <X size={24} />

@@ -55,7 +55,7 @@ export function BloodPressureForm() {
             href="/dashboard"
             className="flex items-center bg-neutral-900 px-3 py-1 rounded-md text-white"
           >
-            Dashboard
+            Painel
           </Link>
           <Link
             href="/dashboard/setting"
